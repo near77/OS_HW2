@@ -1,25 +1,19 @@
+import socket
 import numpy as np
 import cv2
-import socket
-import sys
 
-if len(sys.argv)<4:
-    print('usage : [ ip ] [ port ] [ file name ]')
-    sys.exit()
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 7070        # The port used by the server
 
-ip=sys.argv[1]
-port=int(sys.argv[2])
-sock=socket.socket()
-sock.connect((ip,port))
-
-name=sys.argv[3]
-sock.send(name.encode('utf-8'))
-
-frame = cv2.imread("./LicPlateImages/1.png")
-_,imgencode=cv2.imencode('.jpg',frame,[int(cv2.IMWRITE_JPEG_QUALITY),90])
-data=np.array(imgencode)
-strdata=data.tostring()
-sock.send(str(len(strdata)).ljust(16).encode('utf-8'))
-sock.send(strdata)
-
-
+image = cv2.imread("plates/1.png")
+encode_param = [int(cv2.IMWRITE_JPEG_QUALITY),90]
+_, img_encode = cv2.imencode(".jpeg", image, encode_param)
+data = np.array(img_encode)
+stringData = data.tostring()
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
+    file_name = "../01.mp4"
+    s.send(file_name.encode())
+    s.send(str(len(stringData)).ljust(16).encode())
+    s.send(stringData)
+    s.close()
