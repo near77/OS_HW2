@@ -10,10 +10,18 @@ encode_param = [int(cv2.IMWRITE_JPEG_QUALITY),90]
 _, img_encode = cv2.imencode(".jpeg", image, encode_param)
 data = np.array(img_encode)
 stringData = data.tostring()
+
+image2 = cv2.imread("./road.png")
+_, img_encode2 = cv2.imencode(".jpeg", image2, encode_param)
+data2 = np.array(img_encode2)
+stringData2 = data2.tostring()
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     file_name = "../01.mp4"
     s.send(file_name.encode())
     s.send(str(len(stringData)).ljust(16).encode())
     s.send(stringData)
+    s.send(str(len(stringData2)).ljust(16).encode())
+    s.send(stringData2)
     s.close()

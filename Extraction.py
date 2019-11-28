@@ -52,7 +52,7 @@ def LicencePlateDetector(img):
     for i in range(0, len(contours)):
 
         # draw contours based on actual found contours of thresh image
-        cv2.drawContours(imageContours, contours, i, (255, 255, 255))
+        # cv2.drawContours(imageContours, contours, i, (255, 255, 255))
 
         # retrieve a possible char by the result ifChar class give us
         possibleChar = Functions.ifChar(contours[i])
@@ -62,7 +62,7 @@ def LicencePlateDetector(img):
             countOfPossibleChars = countOfPossibleChars + 1
             possibleChars.append(possibleChar)
 
-
+    
     imageContours = np.zeros((height, width, 3), np.uint8)
 
     ctrs = []
@@ -70,9 +70,9 @@ def LicencePlateDetector(img):
     # populating ctrs list with each char of possibleChars
     for char in possibleChars:
         ctrs.append(char.contour)
-
+    
     # using values from ctrs to draw new contours
-    # cv2.drawContours(imageContours, ctrs, -1, (255, 255, 255))
+    cv2.drawContours(imageContours, ctrs, -1, (255, 255, 255))
 
     plates_list = []
     listOfListsOfMatchingChars = []
@@ -119,7 +119,7 @@ def LicencePlateDetector(img):
         # here we are re-arranging the one big list of chars into a list of lists of matching chars
         # the chars that are not found to be in a group of matches do not need to be considered further
         listOfMatchingChars = matchingChars(possibleC, possibleChars)
-
+        
         listOfMatchingChars.append(possibleC)
 
         # if current possible list of matching chars is not long enough to constitute a possible plate
@@ -142,7 +142,7 @@ def LicencePlateDetector(img):
         break
 
     imageContours = np.zeros((height, width, 3), np.uint8)
-
+    
     for listOfMatchingChars in listOfListsOfMatchingChars:
         contoursColor = (255, 0, 255)
 
@@ -150,8 +150,8 @@ def LicencePlateDetector(img):
 
         for matchingChar in listOfMatchingChars:
             contours.append(matchingChar.contour)
-
-        # cv2.drawContours(imageContours, contours, -1, contoursColor)
+        
+        cv2.drawContours(imageContours, contours, -1, contoursColor)
     
 
     for listOfMatchingChars in listOfListsOfMatchingChars:
@@ -208,36 +208,37 @@ def LicencePlateDetector(img):
         if possiblePlate.Plate is not None:
             plates_list.append(possiblePlate)
 
-        """
         # draw a ROI on the original image
-        for i in range(0, len(plates_list)):
-            # finds the four vertices of a rotated rect - it is useful to draw the rectangle.
-            p2fRectPoints = cv2.boxPoints(plates_list[i].rrLocationOfPlateInScene)
+        # for i in range(0, len(plates_list)):
+            
+        #     # finds the four vertices of a rotated rect - it is useful to draw the rectangle.
+        #     p2fRectPoints = cv2.boxPoints(plates_list[i].rrLocationOfPlateInScene)
 
-            # roi rectangle colour
-            rectColour = (0, 255, 0)
+        #     # roi rectangle colour
+        #     rectColour = (0, 255, 0)
 
-            cv2.line(imageContours, tuple(p2fRectPoints[0]), tuple(p2fRectPoints[1]), rectColour, 2)
-            cv2.line(imageContours, tuple(p2fRectPoints[1]), tuple(p2fRectPoints[2]), rectColour, 2)
-            cv2.line(imageContours, tuple(p2fRectPoints[2]), tuple(p2fRectPoints[3]), rectColour, 2)
-            cv2.line(imageContours, tuple(p2fRectPoints[3]), tuple(p2fRectPoints[0]), rectColour, 2)
+            # cv2.line(imageContours, tuple(p2fRectPoints[0]), tuple(p2fRectPoints[1]), rectColour, 2)
+            # cv2.line(imageContours, tuple(p2fRectPoints[1]), tuple(p2fRectPoints[2]), rectColour, 2)
+            # cv2.line(imageContours, tuple(p2fRectPoints[2]), tuple(p2fRectPoints[3]), rectColour, 2)
+            # cv2.line(imageContours, tuple(p2fRectPoints[3]), tuple(p2fRectPoints[0]), rectColour, 2)
 
-            cv2.line(img, tuple(p2fRectPoints[0]), tuple(p2fRectPoints[1]), rectColour, 2)
-            cv2.line(img, tuple(p2fRectPoints[1]), tuple(p2fRectPoints[2]), rectColour, 2)
-            cv2.line(img, tuple(p2fRectPoints[2]), tuple(p2fRectPoints[3]), rectColour, 2)
-            cv2.line(img, tuple(p2fRectPoints[3]), tuple(p2fRectPoints[0]), rectColour, 2)
+            # cv2.line(img, tuple(p2fRectPoints[0]), tuple(p2fRectPoints[1]), rectColour, 2)
+            # cv2.line(img, tuple(p2fRectPoints[1]), tuple(p2fRectPoints[2]), rectColour, 2)
+            # cv2.line(img, tuple(p2fRectPoints[2]), tuple(p2fRectPoints[3]), rectColour, 2)
+            # cv2.line(img, tuple(p2fRectPoints[3]), tuple(p2fRectPoints[0]), rectColour, 2)
 
             # cv2.imshow("detected", imageContours)
             # cv2.imwrite(temp_folder + '11 - detected.png', imageContours)
-
-            cv2.imshow("detectedOriginal", img)
+            # if len(listOfListsOfMatchingChars[0]) < 4:
+            #     cv2.imshow("detectedOriginal", img)
             # cv2.imwrite(temp_folder + '12 - detectedOriginal.png', img)
 
             # cv2.imshow("plate", plates_list[i].Plate)
             # cv2.imwrite(temp_folder + '13 - plate.png', plates_list[i].Plate)
-        """
-    # cv2.waitKey(0)
-    if len(plates_list) == 0:
+    # print("List of Matching Char: ", len(listOfListsOfMatchingChars[0]))
+    
+    if len(listOfListsOfMatchingChars[0]) < 4:
+        # cv2.waitKey(0)
         return False
     else:
         return True
