@@ -1,9 +1,10 @@
 import socket
 import numpy as np
 import cv2
+import sys
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
-PORT = 7070        # The port used by the server
+PORT = 8080        # The port used by the server
 
 image = cv2.imread("plates/1.png")
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY),90]
@@ -18,10 +19,11 @@ stringData2 = data2.tostring()
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
-    file_name = "../01.mp4"
+    file_name = sys.argv[1]
     s.send(file_name.encode())
-    s.send(str(len(stringData)).ljust(16).encode())
-    s.send(stringData)
+    for i in range(100):
+        s.send(str(len(stringData)).ljust(16).encode())
+        s.send(stringData)
     s.send(str(len(stringData2)).ljust(16).encode())
     s.send(stringData2)
     s.close()

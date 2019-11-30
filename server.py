@@ -65,11 +65,12 @@ class ClientThread(threading.Thread):
     def __init__(self,clientAddress,clientsocket):
         threading.Thread.__init__(self)
         self.csocket = clientsocket
+        self.caddr = clientAddress
         print ("New connection added: ", clientAddress)
     def run(self):
-        print ("Connection from : ", clientAddress)
+        print ("Connection from : ", self.caddr)
         LicencePlateDetector(self.csocket)
-        print ("Client at ", clientAddress , " disconnected...")
+        print ("Client at ", self.caddr , " disconnected...")
 
 
 def main():
