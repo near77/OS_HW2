@@ -17,12 +17,34 @@ def recvall(sock, count):
         count -= len(newbuf)
     return buf
 
+def write_txt(file_name, frame_no_array):
+    filename = file_name.split(".")[-2]
+    while os.path.exists(filename):
+        tmp_int = 0
+        filename = filename + str(tmp_int)
+        tmp_int += 1
+
+    f = open(filename+".txt", "w")
+    f.close()
+    f = open(filename+".txt", "a")
+    for frame_no in frame_no_array:
+        f.write(str(frame_no)+'\n')
+    f.close()
+
+def write_video(video_name, frame_array):
+    height, width, layers = frame_array[0].shape
+    video = cv2.VideoWriter("tmp.avi", 0, 1, (width,height))
+
+    for frame in frame_array:
+        video.write(frame)
+    
 def LicencePlateDetector(conn):
     with conn:
         file_name = conn.recv(6).decode() # Demo will always be 6 bytes
         print("File name: ",file_name)
         frame_count = 1
         frame_array = []
+        frame_no_array = []
         while True:
             stime = time.time()
             length = conn.recv(16)
@@ -33,30 +55,17 @@ def LicencePlateDetector(conn):
                 break
             data = np.frombuffer(stringData, dtype="uint8")
             decimg = cv2.imdecode(data, 1)
+            frame_array.append(decimg)
             have_lic = Detect(decimg)
-            # have_lic = True
             if(have_lic):
-                frame_array.append(frame_count)
-                # print("Licence Plate Detected.")
+                frame_no_array.append(frame_count)
             else:
                 pass
-                # print("There is no Licence Plate.")
             # print("Time per frame: ", time.time() - stime)
             frame_count += 1
+        write_txt(file_name, frame_no_array)
+        write_video(file_name, frame_array)
         
-        filename = file_name.split(".")[-2]
-
-        while os.path.exists(filename):
-            tmp_int = 0
-            filename = filename + str(tmp_int)
-            tmp_int += 1
-    
-        f = open(filename+".txt", "w")
-        f.close()
-        f = open(filename+".txt", "a")
-        for frame in frame_array:
-            f.write(str(frame)+'\n')
-        f.close()
 
 def DataProcessor():
     pass
