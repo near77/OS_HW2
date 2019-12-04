@@ -3,6 +3,7 @@ import cv2
 import time
 import socket, threading
 import numpy as np
+from TOOLS.server_mod import DataProcessor
 from Extraction import LicencePlateDetector as Detect
 
 MAX_CLIENT = 15
@@ -24,7 +25,7 @@ def write_txt(file_name, frame_no_array):
         filename = filename + str(tmp_int)
         tmp_int += 1
 
-    f = open(filename+".txt", "w")
+    f = open(filename+"tmp.txt", "w")
     f.close()
     f = open(filename+".txt", "a")
     for frame_no in frame_no_array:
@@ -33,12 +34,13 @@ def write_txt(file_name, frame_no_array):
 
 def write_video(video_name, frame_array):
     height, width, layers = frame_array[0].shape
-    video = cv2.VideoWriter("tmp.avi", 0, 1, (width,height))
-
+    video = cv2.VideoWriter("tmp.avi", 0, 60, (width,height))
     for frame in frame_array:
         video.write(frame)
-    
+    return video
+
 def LicencePlateDetector(conn):
+    DP = DataProcessor()
     with conn:
         file_name = conn.recv(6).decode() # Demo will always be 6 bytes
         print("File name: ",file_name)
@@ -55,8 +57,11 @@ def LicencePlateDetector(conn):
                 break
             data = np.frombuffer(stringData, dtype="uint8")
             decimg = cv2.imdecode(data, 1)
+            # decimg = cv2.resize(decimg, (640, 480))
             frame_array.append(decimg)
-            have_lic = Detect(decimg)
+            DP.DataProcess(stringData)
+            if frame_count % 60 == 1:
+                have_lic = Detect(decimg)
             if(have_lic):
                 frame_no_array.append(frame_count)
             else:
@@ -66,9 +71,6 @@ def LicencePlateDetector(conn):
         write_txt(file_name, frame_no_array)
         write_video(file_name, frame_array)
         
-
-def DataProcessor():
-    pass
 
 class ClientThread(threading.Thread):
     def __init__(self,clientAddress,clientsocket):
