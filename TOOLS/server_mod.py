@@ -1,3 +1,4 @@
+import os
 import json
 import time
 from hdfs import InsecureClient
@@ -30,10 +31,8 @@ class DataProcessor:
                 for name in list_rslt:
                     file_path = self.img_dir + name
                     self.hdfs_client.delete(file_path)
-
         except util.HdfsError:
             self.hdfs_client.makedirs(self.img_dir)
-
         return True
 
     def DataProcess(self, data, append = False, file_name = None):
@@ -47,4 +46,11 @@ class DataProcessor:
         self.hdfs_client.write(file_name, data, overwrite = True,  replication = 1, append = append)
         delta = time.time() - start
         print("writing complete, time delta is " + str(delta))
+        return True
+
+    def UpLoad(self, remote_name, local_path):
+        assert os.path.exists(local_path)
+
+        remote_path = self.img_dir + remote_name
+        self.hdfs_client.upload(remote_path, local_path)
         return True

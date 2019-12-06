@@ -1,6 +1,6 @@
 {
     "secure_connection": false,
-    "namenode_url": "3.234.207.166",
+    "namenode_url": "3.227.246.96",
     "port": 50070,
     "user": "ubuntu",
     "root_path": "/",

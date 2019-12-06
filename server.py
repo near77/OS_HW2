@@ -32,21 +32,17 @@ def write_txt(file_name, frame_no_array):
         f.write(str(frame_no)+'\n')
     f.close()
 
-def write_video(video_name, frame_array):
-    height, width, layers = frame_array[0].shape
-    video = cv2.VideoWriter("tmp.avi", 0, 60, (width,height))
-    for frame in frame_array:
-        video.write(frame)
-    return video
-
 def LicencePlateDetector(conn):
     DP = DataProcessor()
+    DP.InitImgDir()
+
     with conn:
         file_name = conn.recv(6).decode() # Demo will always be 6 bytes
         print("File name: ",file_name)
         frame_count = 1
-        frame_array = []
         frame_no_array = []
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        video = cv2.VideoWriter(file_name.split(".")[-2] +"tmp.mp4", fourcc, 60, (1920,1080))
         while True:
             stime = time.time()
             length = conn.recv(16)
@@ -57,9 +53,8 @@ def LicencePlateDetector(conn):
                 break
             data = np.frombuffer(stringData, dtype="uint8")
             decimg = cv2.imdecode(data, 1)
+            video.write(decimg)
             # decimg = cv2.resize(decimg, (640, 480))
-            frame_array.append(decimg)
-            DP.DataProcess(stringData)
             if frame_count % 60 == 1:
                 have_lic = Detect(decimg)
             if(have_lic):
@@ -69,7 +64,8 @@ def LicencePlateDetector(conn):
             # print("Time per frame: ", time.time() - stime)
             frame_count += 1
         write_txt(file_name, frame_no_array)
-        write_video(file_name, frame_array)
+        DP.UpLoad(file_name.split(".")[-2] + ".mp4",file_name.split(".")[-2] + "tmp.mp4")
+        DP.UpLoad(file_name.split(".")[-2] + ".txt",file_name.split(".")[-2] + ".txt")
         
 
 class ClientThread(threading.Thread):
