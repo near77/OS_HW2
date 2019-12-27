@@ -67,8 +67,11 @@ def LicencePlateDetector(conn, client_num):
             # print("Time per frame: ", time.time() - stime)
             frame_count += 1
         write_txt(file_name, frame_no_array)
-        DP.Upload(file_name.split(".")[-2] + "tmp.mp4")
-        DP.Upload(file_name.split(".")[-2] + ".txt")
+        parent = os.path.split(os.path.abspath(__file__))[0]
+        vdo_path = os.path.join(parent, file_name.split(".")[-2] + "tmp.mp4")
+        tt_path = os.path.join(parent, file_name.split(".")[-2] + ".txt")
+        DP.Upload(vdo_path)
+        DP.Upload(tt_path)
         
 
 class ClientThread(threading.Thread):
