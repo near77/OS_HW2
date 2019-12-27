@@ -32,9 +32,12 @@ def write_txt(file_name, frame_no_array):
         f.write(str(frame_no)+'\n')
     f.close()
 
-def LicencePlateDetector(conn):
+def LicencePlateDetector(conn, client_num):
     DP = DataProcessor()
-    DP.InitImgDir()
+    if client_num == 1:
+        DP.InitImgDir()
+    else:
+        pass
 
     with conn:
         file_name = conn.recv(6).decode() # Demo will always be 6 bytes
@@ -69,14 +72,14 @@ def LicencePlateDetector(conn):
         
 
 class ClientThread(threading.Thread):
-    def __init__(self,clientAddress,clientsocket):
+    def __init__(self,clientAddress,clientsocket, client_num):
         threading.Thread.__init__(self)
         self.csocket = clientsocket
         self.caddr = clientAddress
         print ("New connection added: ", clientAddress)
     def run(self):
         print ("Connection from : ", self.caddr)
-        LicencePlateDetector(self.csocket)
+        LicencePlateDetector(self.csocket, client_num)
         print ("Client at ", self.caddr , " disconnected...")
 
 
@@ -98,7 +101,7 @@ def main():
         while client_number >= MAX_CLIENT:
             pass
         client_number += 1
-        newthread = ClientThread(clientAddress, clientsock)
+        newthread = ClientThread(clientAddress, clientsock, client_number)
         newthread.start()
 
 
