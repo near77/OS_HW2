@@ -67,6 +67,7 @@ def LicencePlateDetector(conn, client_num):
             # print("Time per frame: ", time.time() - stime)
             frame_count += 1
         write_txt(file_name, frame_no_array)
+        print(file_name.split(".")[-2] + "tmp.mp4")
         DP.Upload(file_name.split(".")[-2] + "tmp.mp4")
         DP.Upload(file_name.split(".")[-2] + ".txt")
         
