@@ -4,9 +4,9 @@ import time
 import socket, threading
 import numpy as np
 from TOOLS.server_mod import DataProcessor
-from Extraction import LicencePlateDetector as Detect
-
-MAX_CLIENT = 15
+# from Extraction import LicencePlateDetector as Detect
+from TOOLS.LicenceDetector import LicencePlateDetector as Detect
+MAX_CLIENT = 5
 
 
 def recvall(sock, count):
