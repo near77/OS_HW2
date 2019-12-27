@@ -76,10 +76,11 @@ class ClientThread(threading.Thread):
         threading.Thread.__init__(self)
         self.csocket = clientsocket
         self.caddr = clientAddress
+        self.client_num = client_num
         print ("New connection added: ", clientAddress)
     def run(self):
         print ("Connection from : ", self.caddr)
-        LicencePlateDetector(self.csocket, client_num)
+        LicencePlateDetector(self.csocket, self.client_num)
         print ("Client at ", self.caddr , " disconnected...")
 
 
