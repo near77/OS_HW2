@@ -67,14 +67,15 @@ def LicencePlateDetector(conn, client_num):
             # print("Time per frame: ", time.time() - stime)
             frame_count += 1
         write_txt(file_name, frame_no_array)
-        parent = os.path.split(os.path.abspath(__file__))[0]
-        vdo_path = os.path.join(parent, file_name.split(".")[-2] + "tmp.mp4")
-        tt_path = os.path.join(parent, file_name.split(".")[-2] + ".txt")
-        assert os.path.exists(vdo_path)
-        assert os.path.exists(tt_path)
-        DP.Upload(vdo_path)
-        DP.Upload(tt_path)
-        
+        abs_path = os.path.split(os.path.abspath(__file__))[0]
+        video_name = os.path.join(abs_path, file_name.split(".")[-2] + "tmp.mp4")
+        text_name = os.path.join(abs_path, file_name.split(".")[-2] + ".txt")
+        assert os.path.exists(video_name)
+        assert os.path.exists(text_name)
+        print("uploading")
+        DP.Upload(video_name)
+        DP.Upload(text_name)
+        print("upload complete")
 
 class ClientThread(threading.Thread):
     def __init__(self,clientAddress,clientsocket, client_num):

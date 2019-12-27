@@ -48,6 +48,6 @@ class DataProcessor:
         self.hdfs_client.write(file_name, data, overwrite = True,  replication = 1, append = append)
         return True
 
-    def Upload(self, vdo_path, threads = 2):
-        self.hdfs_client.upload(hdfs_path = self.img_dir[:-1], local_path = vdo_path, n_threads = threads, overwrite = True)
+    def Upload(self, file_path, threads = 2):
+        self.hdfs_client.upload(hdfs_path = self.img_dir[:-1], local_path = file_path, n_threads = threads, overwrite = True)
         return 0
