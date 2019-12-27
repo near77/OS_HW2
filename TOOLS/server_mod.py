@@ -48,9 +48,9 @@ class DataProcessor:
         print("writing complete, time delta is " + str(delta))
         return True
 
-    def UpLoad(self, remote_name, local_path):
+    def UpLoad(self, local_path):
         assert os.path.exists(local_path)
 
         remote_path = self.img_dir + remote_name
-        self.hdfs_client.upload(remote_path, local_path)
+        self.hdfs_client.upload(self.img_dir[:-1], local_path)
         return True
