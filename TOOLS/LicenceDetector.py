@@ -236,7 +236,7 @@ def LicencePlateDetector(img):
             # cv2.imshow("plate", plates_list[i].Plate)
             # cv2.imwrite(temp_folder + '13 - plate.png', plates_list[i].Plate)
     # print("List of Matching Char: ", len(listOfListsOfMatchingChars[0]))
-    
+    print("Char: ", len(listOfListsOfMatchingChars[0]))
     if len(listOfListsOfMatchingChars[0]) < 4:
         # cv2.waitKey(0)
         return False

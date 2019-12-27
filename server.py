@@ -24,8 +24,7 @@ def write_txt(file_name, frame_no_array):
         tmp_int = 0
         filename = filename + str(tmp_int)
         tmp_int += 1
-
-    f = open(filename+"tmp.txt", "w")
+    f = open(filename+".txt", "w")
     f.close()
     f = open(filename+".txt", "a")
     for frame_no in frame_no_array:
@@ -45,7 +44,7 @@ def LicencePlateDetector(conn, client_num):
         frame_count = 1
         frame_no_array = []
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        video = cv2.VideoWriter(file_name.split(".")[-2] +"tmp.mp4", fourcc, 60, (1920,1080))
+        video = cv2.VideoWriter(file_name.split(".")[-2] +"tmp.mp4", fourcc, 60, (1280,720))
         while True:
             stime = time.time()
             length = conn.recv(16)
@@ -60,6 +59,7 @@ def LicencePlateDetector(conn, client_num):
             # decimg = cv2.resize(decimg, (640, 480))
             if frame_count % 60 == 1:
                 have_lic = Detect(decimg)
+            # have_lic = Detect(decimg)
             if(have_lic):
                 frame_no_array.append(frame_count)
             else:
@@ -67,7 +67,6 @@ def LicencePlateDetector(conn, client_num):
             # print("Time per frame: ", time.time() - stime)
             frame_count += 1
         write_txt(file_name, frame_no_array)
-        print(file_name.split(".")[-2] + "tmp.mp4")
         DP.Upload(file_name.split(".")[-2] + "tmp.mp4")
         DP.Upload(file_name.split(".")[-2] + ".txt")
         
