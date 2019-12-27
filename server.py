@@ -70,6 +70,8 @@ def LicencePlateDetector(conn, client_num):
         parent = os.path.split(os.path.abspath(__file__))[0]
         vdo_path = os.path.join(parent, file_name.split(".")[-2] + "tmp.mp4")
         tt_path = os.path.join(parent, file_name.split(".")[-2] + ".txt")
+        assert os.path.exists(vdo_path)
+        assert os.path.exists(tt_path)
         DP.Upload(vdo_path)
         DP.Upload(tt_path)
         
