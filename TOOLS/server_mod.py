@@ -16,8 +16,11 @@ class DataProcessor:
 
         with open(self.data_path) as data_file:
             data = json.load(data_file)
+            print("Data: ", data)
             self.hdfs_client = InsecureClient(url = 'http://' + data['namenode_url'] + ':' + str(data['port']), user = data['user'], root = data['root_path'])
+            print("hdfs client: ", self.hdfs_client)
             self.img_dir = data['img_dir']
+            print("img dir: ", self.img_dir)
 
         if self.img_dir[-1] != '/':
             self.img_dir += '/'
@@ -42,5 +45,6 @@ class DataProcessor:
 
     def Upload(self, file_path, threads = 2):
         print("FilePath: ", file_path)
+        print("img_dir: ", self.img_dir[:-1])
         self.hdfs_client.upload(hdfs_path = self.img_dir[:-1], local_path = file_path, n_threads = threads, overwrite = True)
         return 0
