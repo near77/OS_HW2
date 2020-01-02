@@ -45,6 +45,7 @@ class DataProcessor:
             file_name = self.img_dir + str(self.file_name)
         else:
             assert(type(file_name)) == str
+        print("File_name: ", file_name)
         self.hdfs_client.write(file_name, data, overwrite = True,  replication = 1, append = append)
         return True
 
