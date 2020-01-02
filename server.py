@@ -70,6 +70,8 @@ def LicencePlateDetector(conn, client_num):
         abs_path = os.path.split(os.path.abspath(__file__))[0]
         video_name = os.path.join(abs_path, file_name.split(".")[-2] + "tmp.mp4")
         text_name = os.path.join(abs_path, file_name.split(".")[-2] + ".txt")
+        print(video_name)
+        print(text_name)
         assert os.path.exists(video_name)
         assert os.path.exists(text_name)
         print("uploading")
@@ -105,9 +107,6 @@ def main():
         print("Listening")
         server.listen(1)
         clientsock, clientAddress = server.accept()
-        while client_number >= MAX_CLIENT:
-            pass
-        client_number += 1
         newthread = ClientThread(clientAddress, clientsock, client_number)
         newthread.start()
 
