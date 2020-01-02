@@ -39,16 +39,8 @@ class DataProcessor:
 
         return True
 
-    def DataProcess(self, data, append = False, file_name = None):
-        assert type(data) == str
-        if file_name == None:
-            file_name = self.img_dir + str(self.file_name)
-        else:
-            assert(type(file_name)) == str
-        print("File_name: ", file_name)
-        self.hdfs_client.write(file_name, data, overwrite = True,  replication = 1, append = append)
-        return True
 
     def Upload(self, file_path, threads = 2):
+        print("FilePath: ", file_path)
         self.hdfs_client.upload(hdfs_path = self.img_dir[:-1], local_path = file_path, n_threads = threads, overwrite = True)
         return 0
