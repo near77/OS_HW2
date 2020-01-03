@@ -94,7 +94,7 @@ class ClientThread(threading.Thread):
 
 def main():
     LOCALHOST = "127.0.0.1"
-    PORT = 8080
+    PORT = 9999
     client_number = 0
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
